@@ -4,11 +4,12 @@ import json
 from datetime import datetime
 
 class HotelReservation:
-    def __init__(self, IDCARD, creditcardNumb, nAMeAndSURNAME, phonenumber, room_type,numdays):
+    def __init__(self, IDCARD, creditcardNumb, nAMeAndSURNAME, phonenumber, room_type,arrival, numdays):
         self.__crEDITcardnumber = creditcardNumb
         self.__idcard = IDCARD
         justnow = datetime.utcnow()
-        self.__ARRIVAL = datetime.timestamp(justnow)
+        self.__ARRIVAL = arrival
+        self.__RESerVationdate = datetime.timestamp(justnow)
         self.__NAME_SURNAME = nAMeAndSURNAME
         self.__phonenumber = phonenumber
         self.__roomtype = room_type
@@ -21,6 +22,7 @@ class HotelReservation:
                      "name_surname": self.__NAME_SURNAME,
                      "credit_card": self.__crEDITcardnumber,
                      "phone_number:": self.__phonenumber,
+                     "reservation_date": self.__RESerVationdate,
                      "arrival_date": self.__ARRIVAL,
                      "num_days": self.__num_days,
                      "room_type": self.__roomtype,
