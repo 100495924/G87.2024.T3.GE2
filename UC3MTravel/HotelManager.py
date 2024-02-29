@@ -6,10 +6,21 @@ class HotelManager:
     def __init__(self):
         pass
 
-    def validatecreditcard( self, x ):
-        # PLEASE INCLUDE HERE THE CODE FOR VALIDATING THE GUID
-        # RETURN TRUE IF THE GUID IS RIGHT, OR FALSE IN OTHER CASE
-        return True
+    def validatecreditcard( self, card_id: str):
+        check_digit = card_id[len(card_id) - 1]
+        payload = card_id[:len(card_id) - 1]
+        sum = 0
+        double = True
+        for i in range(len(card_id) - 2, -1, -1):
+            if double:
+                sum_digit = 2 * int(payload[i])
+            else:
+                sum_digit = int(payload[i])
+            if sum_digit >= 10:
+                sum_digit = 1 + sum_digit % 10
+            sum += sum_digit
+            double = not double
+        return int(check_digit) == 10 - (sum % 10)
 
     def ReaddatafromJSOn( self, fi):
 
