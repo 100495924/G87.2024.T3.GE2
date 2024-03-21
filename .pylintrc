@@ -216,14 +216,14 @@ inlinevar-naming-style=snake_case
 #inlinevar-rgx=
 
 # Naming style matching correct method names.
-# MODIFIED RULE
-#method-naming-style=snake_case
 
-method-naming-style=camelCase
+#method-naming-style=snake_case
 
 # Regular expression matching correct method names. Overrides method-naming-
 # style. If left empty, method names will be checked with the set naming style.
+# MODIFIED RULE
 #method-rgx=
+method-rgx=([a-z_][A-Za-z0-9_][A-Za-z0-9]{2,30})|(__[a-z0-9]__)$
 
 # Naming style matching correct module names.
 # MODIFIED RULE
