@@ -6,6 +6,9 @@ class HotelManager:
     def __init__(self):
         pass
 
+    def roomReservation(self, credit_card, name_surname, id_card, room_type, arrival_date, num_days):
+        pass
+
     def validateCreditCard( self, card_id: str):
         check_digit = card_id[len(card_id) - 1]
         payload = card_id[:len(card_id) - 1]
