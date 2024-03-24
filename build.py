@@ -8,7 +8,7 @@ use_plugin("python.coverage")
 use_plugin("python.distutils")
 
 
-name = "EG2"
+name = "G87.2024.T3.GE2"
 default_task = "publish"
 
 
