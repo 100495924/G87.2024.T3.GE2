@@ -46,6 +46,54 @@ class HotelReservation:
         self.__id_card = value
 
     @property
+    def arrival_date(self):
+        return self.__arrival_date
+
+    @arrival_date.setter
+    def arrival_date(self, value):
+        self.__arrival_date = value
+
+    @property
+    def reservation_date(self):
+        return self.__reservation_date
+
+    @reservation_date.setter
+    def reservation_date(self, value):
+        self.__reservation_date = value
+
+    @property
+    def name_surname(self):
+        return self.__name_surname
+
+    @name_surname.setter
+    def name_surname(self, value):
+        self.__name_surname = value
+
+    @property
+    def phone_number(self):
+        return self.__phone_number
+
+    @phone_number.setter
+    def phone_number(self, value):
+        self.__phone_number = value
+
+    @property
+    def room_type(self):
+        return self.__room_type
+
+    @room_type.setter
+    def room_type(self, value):
+        self.__room_type = value
+
+    @property
+    def num_days(self):
+        return self.__num_days
+
+    @num_days.setter
+    def num_days(self, value):
+        self.__num_days = value
+
+    @property
     def localizer(self):
         """Returns the md5 signature"""
         return hashlib.md5(self.__str__().encode()).hexdigest()

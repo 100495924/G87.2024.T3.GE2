@@ -25,42 +25,38 @@ class HotelManager:
 
         # We create the json file with the reservation data that will be further processed in guestArrival (Function 2)
 
-        # This json file contains the localizer and the id_card
-        # The algorithm to obtain the localizer (a MD5 string) is in the HotelReservation class
-        hr = HotelReservation(credit_card, name_surname, id_card, phone_number, room_type, arrival_date, num_days)
+        # As there can only be 1 reservation per client, we use the value of the id_card to ensure the name of each
+        # generated file is unique
+        file_name = id_card + ".json"
+
+        # This json file contains the attributes of the HotelReservation class, which are calculated using the
+        # attributes of our current HotelManager class
+        hr = HotelReservation(credit_card=credit_card,
+                              name_surname=name_surname,
+                              id_card=id_card,
+                              phone_number=phone_number,
+                              room_type=room_type,
+                              arrival_date=arrival_date,
+                              num_days=num_days)
+
+        # The algorithm to obtain the localizer (a MD5 string) is applied and stored
         md5_localizer = hr.localizer
 
-        # We save the current directory, so we can restore it later
-        original_directory = os.getcwd()
-
-        # We change the current directory to the directory where the json file will be stored to later be able to
-        # save it there
-        os.chdir(self.getJsonDirectory())
-
         # Data that will be written in the json file
-        json_data = {
-            "Localizer": md5_localizer,
-            "IdCard": id_card,
-        }
+        json_data = {"id_card": hr.id_card,
+                     "name_surname": hr.name_surname,
+                     "credit_card": hr.credit_card,
+                     "phone_number": hr.phone_number,
+                     "reservation_date": hr.reservation_date,
+                     "arrival_date": hr.arrival_date,
+                     "num_days": hr.num_days,
+                     "room_type": hr.room_type,
+                     "localizer": md5_localizer
+                     }
 
-        # json files will be named as reservation1.json, reservation2.json, reservation3.json... to ensure each
-        # generated file has a unique name. Each number represents the number of files that already exist in the
-        # json_files directory
-        file_name = "reservation" + str(len(os.listdir())) + ".json"
-
-        # We open the file for writing (it is created if it does not exist) and we write the data
-        with (open(file_name, "w", encoding="utf-8")
-              as reservation_file):
-            reservation_file.write(json.dumps(json_data, indent=4))
-
-        # We need to delete the created file if it was created for testing purposes
-        # If we do not do this we will get the "client already has a reservation" exception because we use the same
-        # id_card in several test cases
-        if "unittest" in original_directory:
-            os.remove(file_name)
-
-        # We restore the original current directory
-        os.chdir(original_directory)
+        # We will create a json file named file_name in the reservations_store folder, and the content we have to write
+        # on it is defined in json_data
+        self.createJsonFile(file_name, "reservations_store", json_data)
 
         # We return the localizer
         return md5_localizer
@@ -182,20 +178,17 @@ class HotelManager:
             raise HotelManagementException("invalid letter for id_card")
 
         # Now we need to check if the client that is doing the reservation already has a reservation
-        # Each client is univocally identified by his/her id_card, so we need to check that there is no json file
-        # stored in the json_files directory such that its "IdCard" key is the input id_card
+        # Each client is univocally identified by his/her id_card, and the name of every json file corresponds to
+        # the id_card of the client who made the reservation, so we need to check that there is no json file stored in
+        # the reservations_store directory whose name is the input id_card
 
-        # We get the json_files directory (absolute path)
-        directory = self.getJsonDirectory()
+        # We get the reservations_store directory (absolute path)
+        directory = self.getJsonDirectory("reservations_store")
 
         # We iterate through each of the json files stored in that directory
         for file_name in os.listdir(directory):
-            # We get the absolute path of the specific json file
-            file_path = os.path.join(directory, file_name)
-            # This function reads the file and returns the value of the "IdCard" key
-            json_id_card = self.readDataFromJson(file_path)
-            # If there is a coincidence, we throw an exception
-            if json_id_card == id_card:
+            # The name of the json files corresponds to the id_card of the client who made the reservation
+            if id_card in file_name:
                 raise HotelManagementException("a client with specified id_card already has a reservation")
 
     def validatePhoneNumber(self, phone_number: str):
@@ -296,8 +289,8 @@ class HotelManager:
             if character not in digits_list:
                 raise HotelManagementException(exception_message)
 
-    def getJsonDirectory(self):
-        """Returns the directory in which all generated json files are stored"""
+    def getJsonDirectory(self, folder_name: str):
+        """Returns the desired directory in which generated json files are stored"""
         # We need to obtain the common parent directory of all the files of our project, so that the function can be
         # called in any file and still return the same result
         # We also have to take into account that this is a collaborative project, so we cannot simply put a specific
@@ -312,8 +305,31 @@ class HotelManager:
         project_directory = current_directory[:index]
         # We navigate down the directory to reach the json_file directory
         json_directory = os.path.join(project_directory,
-                                      "G87.2024.T3.GE2", "src", "main", "python", "UC3MTravel", "json_files")
+                                      "G87.2024.T3.GE2", "src", "main", "python", "UC3MTravel", folder_name)
         return json_directory
+
+    def createJsonFile(self, file_name: str, folder_name: str, json_data: dict):
+        """Creates a json file named file_name in the folder folder_name and writes on it json_data"""
+        # First, we need to get the absolute path of the directory where we want to store the json file
+        json_directory = self.getJsonDirectory(folder_name)
+
+        # We save the current directory, so we can restore it later
+        original_directory = os.getcwd()
+
+        # We change the current directory to the directory where the json file will be stored to be able to save it
+        # there
+        os.chdir(json_directory)
+
+        # We open the file for writing (it is created if it does not exist) and we write the data
+        with open(file_name, "w", encoding="utf-8") as open_file:
+            open_file.write(json.dumps(json_data, indent=4))
+
+        # We need to delete the created file if it was created for testing purposes
+        if "unittest" in original_directory:
+            os.remove(file_name)
+
+        # We restore the original current directory
+        os.chdir(original_directory)
 
     def readDataFromJson(self, file_path: str):
         """Reads a given json file and returns the value of its IdCard key"""

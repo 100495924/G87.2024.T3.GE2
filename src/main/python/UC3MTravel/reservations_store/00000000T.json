@@ -1,0 +1,11 @@
+{
+    "id_card": "00000000T",
+    "name_surname": "John Smith",
+    "credit_card": "5105105105105100",
+    "phone_number": "612345789",
+    "reservation_date": 1719792000.0,
+    "arrival_date": "01/07/2024",
+    "num_days": 1,
+    "room_type": "single",
+    "localizer": "cdaeb5334e828615221afb3f4aed4607"
+}

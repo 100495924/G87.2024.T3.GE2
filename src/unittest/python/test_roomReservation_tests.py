@@ -20,7 +20,7 @@ class TestRoomReservation(TestCase):
                                                       room_type="single",
                                                       arrival_date="01/07/2024",
                                                       num_days=1)
-        self.assertEqual(value, "d1ceeb9cf3d071d4f2856b9f33d8652b")
+        self.assertEqual(value, "385148f30bfe0c80599f7c844216578a")
 
     @freeze_time(datetime.strptime("01/07/2024", "%d/%m/%Y"))
     def test_room_reservation02(self):
@@ -97,7 +97,7 @@ class TestRoomReservation(TestCase):
                                                       room_type="single",
                                                       arrival_date="01/07/2024",
                                                       num_days=1)
-        self.assertEqual(value, "fdce199e406ab6b08f7875b80035ec3e")
+        self.assertEqual(value, "9082506560e5457fb0089c4b48ccdb42")
 
     @freeze_time(datetime.strptime("01/07/2024", "%d/%m/%Y"))
     def test_room_reservation08(self):
@@ -109,7 +109,7 @@ class TestRoomReservation(TestCase):
                                                       room_type="single",
                                                       arrival_date="01/07/2024",
                                                       num_days=1)
-        self.assertEqual(value, "9176b385ed0784978e2864d43085130d")
+        self.assertEqual(value, "9f27edcc737a118c24908738601423ba")
 
     @freeze_time(datetime.strptime("01/07/2024", "%d/%m/%Y"))
     def test_room_reservation09(self):
@@ -121,7 +121,7 @@ class TestRoomReservation(TestCase):
                                                       room_type="single",
                                                       arrival_date="01/07/2024",
                                                       num_days=1)
-        self.assertEqual(value, "de05434b87c95c43404579b0776cb1b9")
+        self.assertEqual(value, "3ca03f80303fd71b309a2b9f1c51b25d")
 
     @freeze_time(datetime.strptime("01/07/2024", "%d/%m/%Y"))
     def test_room_reservation10(self):
@@ -133,7 +133,7 @@ class TestRoomReservation(TestCase):
                                                       room_type="single",
                                                       arrival_date="01/07/2024",
                                                       num_days=1)
-        self.assertEqual(value, "f1598a1c22efb33070d44bf66f4e880e")
+        self.assertEqual(value, "bb948f04a913f377edacbab412fe56e3")
 
     @freeze_time(datetime.strptime("01/07/2024", "%d/%m/%Y"))
     def test_room_reservation11(self):
@@ -381,7 +381,7 @@ class TestRoomReservation(TestCase):
                                                       room_type="double",
                                                       arrival_date="01/07/2024",
                                                       num_days=1)
-        self.assertEqual(value, "a4226e620ef9427c2fa08cda763ab9c8")
+        self.assertEqual(value, "fa5a80736b0b59461642e6511e8a1f9e")
 
     @freeze_time(datetime.strptime("01/07/2024", "%d/%m/%Y"))
     def test_room_reservation30(self):
@@ -393,7 +393,7 @@ class TestRoomReservation(TestCase):
                                                       room_type="suite",
                                                       arrival_date="01/07/2024",
                                                       num_days=1)
-        self.assertEqual(value, "4e2877c218579898e70851dec6f9dd69")
+        self.assertEqual(value, "e05811f7d87dc9eb54ffa6080d425dd4")
 
     @freeze_time(datetime.strptime("01/07/2024", "%d/%m/%Y"))
     def test_room_reservation31(self):
@@ -431,7 +431,7 @@ class TestRoomReservation(TestCase):
                                                       room_type="single",
                                                       arrival_date="02/07/2024",
                                                       num_days=1)
-        self.assertEqual(value, "f1d6c3c26ef1c1f4cec51667ae0ca5aa")
+        self.assertEqual(value, "f7dcfc6221b24ce9c176aa61d8b123dd")
 
     @freeze_time(datetime.strptime("01/07/2024", "%d/%m/%Y"))
     def test_room_reservation34(self):
@@ -677,7 +677,7 @@ class TestRoomReservation(TestCase):
                                                       room_type="single",
                                                       arrival_date="01/07/2024",
                                                       num_days=2)
-        self.assertEqual(value, "491ae0b907e64c0ae5f379c497b3b73a")
+        self.assertEqual(value, "7bb82656140fdcad38da6a7f323a0d57")
 
     @freeze_time(datetime.strptime("01/07/2024", "%d/%m/%Y"))
     def test_room_reservation53(self):
@@ -689,7 +689,7 @@ class TestRoomReservation(TestCase):
                                                       room_type="single",
                                                       arrival_date="01/07/2024",
                                                       num_days=9)
-        self.assertEqual(value, "b033f5c5e61cc667032d4096e006494a")
+        self.assertEqual(value, "36b4d8e28eb343a54ecb0bbe9e880233")
 
     @freeze_time(datetime.strptime("01/07/2024", "%d/%m/%Y"))
     def test_room_reservation54(self):
@@ -701,7 +701,7 @@ class TestRoomReservation(TestCase):
                                                       room_type="single",
                                                       arrival_date="01/07/2024",
                                                       num_days=10)
-        self.assertEqual(value, "4b557eaf932b9e32d4a6fbf0fc597c8c")
+        self.assertEqual(value, "23aa42c0b1d9b69ecde79c5677ce7c7f")
 
     @freeze_time(datetime.strptime("01/07/2024", "%d/%m/%Y"))
     def test_room_reservation55(self):
