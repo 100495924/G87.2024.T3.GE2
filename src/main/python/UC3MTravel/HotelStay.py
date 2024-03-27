@@ -3,7 +3,7 @@ from datetime import datetime
 import hashlib
 
 class HotelStay():
-    def __init__(self, idcard, localizer, numdays, roomtype  ):
+    def __init__(self, idcard, localizer, numdays, roomtype):
         self.__alg = "SHA-256"
         self.__type = roomtype
         self.__idcard = idcard
@@ -18,12 +18,16 @@ class HotelStay():
     def __signature_string(self):
         """Composes the string to be used for generating the key for the room"""
         return "{alg:" + self.__alg + ",typ:" + self.__type + ",localizer:" + \
-            self.__localizer + ",arrival:" + self.__arrival + \
-            ",departure:" + self.__departure + "}"
+            self.__localizer + ",arrival:" + str(self.__arrival) + \
+            ",departure:" + str(self.__departure) + "}"
+
+    @property
+    def type(self):
+        return self.__type
 
     @property
     def idCard(self):
-        """Property that represents the product_id of the patient"""
+        """Property that represents the id_card of the guest."""
         return self.__idcard
 
     @idCard.setter
@@ -32,7 +36,7 @@ class HotelStay():
 
     @property
     def localizer(self):
-        """Property that represents the order_id"""
+        """Property that represents the localizer"""
         return self.__localizer
 
     @localizer.setter
@@ -41,7 +45,7 @@ class HotelStay():
 
     @property
     def arrival(self):
-        """Property that represents the phone number of the client"""
+        """Property that represents the arrival date of the client."""
         return self.__arrival
 
     @property
@@ -51,7 +55,7 @@ class HotelStay():
 
     @property
     def departure(self):
-        """Returns the issued at value"""
+        """Property that represents the departure date."""
         return self.__departure
 
     @departure.setter

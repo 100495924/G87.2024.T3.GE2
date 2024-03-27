@@ -3,6 +3,7 @@ import os
 from datetime import datetime
 from src.main.python.UC3MTravel.HotelManagementException import HotelManagementException
 from src.main.python.UC3MTravel.HotelReservation import HotelReservation
+from src.main.python.UC3MTravel.HotelStay import HotelStay
 
 
 class HotelManager:
@@ -56,10 +57,73 @@ class HotelManager:
 
         # We will create a json file named file_name in the reservations_store folder, and the content we have to write
         # on it is defined in json_data
-        self.createJsonFile(file_name, "reservations_store", json_data)
+        self.createJsonFile(file_name, "reservations_store", json_data, True)
 
         # We return the localizer
         return md5_localizer
+
+    def guestArrival(self, input_file: str):
+        """ Function 2: Arrival at the hotel
+        Returns a SHA-256 string with the key in hexadecimal format (HM-FR-02-O1),
+        a JSON file with the processed stays. (HM-FR-02-O2)
+        or a HotelManagementException in the case of errors (HM-FR-02-O3)."""
+        # The path of the file assumes that already contains the following path:
+        # G87.2024.T3.GE2\src\main\python\UC3MTravel\stays_store
+
+        # Getting the directory in which all the json file of this project are stored.
+        stay_json_dir = self.getJsonDirectory("stays_store")
+        stay_file_path = os.path.join(stay_json_dir, input_file)
+
+        # We will open and read the content from the input file with the function readDataFromJson.
+        id_card, localizer = self.readDataFromStayJson(stay_file_path)
+
+        # Getting the path of the reservation file whose name is id_card.json
+        reservation_json_dir = self.getJsonDirectory("reservations_store")
+        reservation_filename = id_card + ".json"
+        reservation_file_path = os.path.join(reservation_json_dir, reservation_filename)
+        # Reading and storing the data from the reservation file into a tuple.
+        reservation_data = self.readDataFromReservationJson(reservation_file_path)
+        if localizer != reservation_data[8]:
+            raise HotelManagementException("The JSON data does not have valid values.")
+        if id_card != reservation_data[0]:
+            raise HotelManagementException("The JSON data does not have valid values.")
+
+        reservation = HotelReservation(reservation_data[0], reservation_data[2], reservation_data[1],
+                                       reservation_data[3], reservation_data[7], reservation_data[5],
+                                       reservation_data[6])
+
+        # We want to generate a new localizer with the data we have read from the reservation .json and compare it
+        new_localizer = reservation.localizer
+        if new_localizer != localizer:
+            raise HotelManagementException("The locator does not correspond to the stored data.")
+        # reservation_data[4] is reservation_date, reservation_data[5] is arrival_date
+        try:
+            # converting arrival date into a timestamp.
+            arrival_date = datetime.timestamp(datetime.strptime(reservation_data[5], "%d/%m/%Y"))
+        except ValueError as ex:
+            raise HotelManagementException("The arrival date does not correspond to the reservation date") from ex
+
+        # Now we can compare both dates to ensure they are equal.
+        if arrival_date != reservation_data[4]:
+            raise HotelManagementException("The arrival date does not correspond to the reservation date")
+
+        hotel_stay = HotelStay(reservation_data[0], localizer, reservation_data[6], reservation_data[7])
+        # We retrieve the room key that has been already calculated in the HotelStay() object.
+        room_key = hotel_stay.room_key
+
+        file_name = room_key + ".json"
+        json_data = {
+            "alg": "SHA-256",
+            "type": hotel_stay.type,
+            "idCard": hotel_stay.idCard,
+            "localizer": hotel_stay.localizer,
+            "arrival": hotel_stay.arrival,
+            "departure": hotel_stay.departure,
+            "room_key": hotel_stay.room_key
+        }
+        self.createJsonFile(file_name, "processed_stays_store", json_data, False)
+
+        return room_key
 
     def validateCreditCard(self, credit_card: str):
         """Checks if the credit_card parameter of the roomReservation function is valid, else it raises the
@@ -308,7 +372,7 @@ class HotelManager:
                                       "G87.2024.T3.GE2", "src", "main", "python", "UC3MTravel", folder_name)
         return json_directory
 
-    def createJsonFile(self, file_name: str, folder_name: str, json_data: dict):
+    def createJsonFile(self, file_name: str, folder_name: str, json_data: dict, delete_test: bool):
         """Creates a json file named file_name in the folder folder_name and writes on it json_data"""
         # First, we need to get the absolute path of the directory where we want to store the json file
         json_directory = self.getJsonDirectory(folder_name)
@@ -325,16 +389,46 @@ class HotelManager:
             open_file.write(json.dumps(json_data, indent=4))
 
         # We need to delete the created file if it was created for testing purposes
-        if "unittest" in original_directory:
+        if "unittest" in original_directory and delete_test:
             os.remove(file_name)
 
         # We restore the original current directory
         os.chdir(original_directory)
 
-    def readDataFromJson(self, file_path: str):
-        """Reads a given json file and returns the value of its IdCard key"""
-        # Tries to open the file for reading and storing its content in a variable, and throws an exception if an error
-        # occurs during the process
+    def readDataFromStayJson(self, file_path: str):
+        """Reads a given stay json file and returns the value of its IdCard key and Localizer key."""
+        # First, it makes sure the path for the input file has the .json extension, then it tries to open the file for
+        # reading and storing its content in a variable, and throws an exception if an error occurs during the process.
+        if file_path[-5:] != ".json":
+            raise HotelManagementException("The file is not in JSON format")
+        try:
+            with open(file_path, "r", encoding="utf-8") as open_file:
+                data = json.load(open_file)
+        except FileNotFoundError as ex:
+            raise HotelManagementException("The data file cannot be found.") from ex
+        except json.JSONDecodeError as ex:
+            raise HotelManagementException("The JSON does not have the expected structure.") from ex
+
+        # We get the value of the IdCard key and the Localizer key.
+        try:
+            json_id_card = data["IdCard"]
+            json_localizer = data["Localizer"]
+        except KeyError as ex:
+            open_file.close()
+            raise HotelManagementException("The JSON does not have the expected structure.") from ex
+        if len(json_id_card) != 9 or len(json_localizer) != 32:
+            raise HotelManagementException("The JSON data does not have valid values.")
+
+        # Close the file and return the value
+        open_file.close()
+        return json_id_card, json_localizer
+
+    def readDataFromReservationJson(self, file_path: str):
+        """Reads a given reservation json file and returns the value of its keys.."""
+        # First, it makes sure the path for the input file has the .json extension, then it tries to open the file for
+        # reading and storing its content in a variable, and throws an exception if an error occurs during the process.
+        if file_path[-5:] != ".json":
+            raise HotelManagementException("Wrong file or file path")
         try:
             with open(file_path, "r", encoding="utf-8") as open_file:
                 data = json.load(open_file)
@@ -343,11 +437,53 @@ class HotelManager:
         except json.JSONDecodeError as ex:
             raise HotelManagementException("JSON Decode Error - Wrong JSON Format") from ex
 
-        # We get the value of the IdCard key
         try:
-            json_id_card = data["IdCard"]
+            json_id_card = data["id_card"]
+            json_name_surname = data["name_surname"]
+            json_credit_card = data["credit_card"]
+            json_phone_number = data["phone_number"]
+            json_reservation_date = data["reservation_date"]
+            json_arrival_date = data["arrival_date"]
+            json_num_days = data["num_days"]
+            json_room_type = data["room_type"]
+            json_localizer = data["localizer"]
         except KeyError as ex:
+            open_file.close()
             raise HotelManagementException("JSON Decode Error - Invalid JSON Key") from ex
 
         # Close the file and return the value
-        return json_id_card
+        open_file.close()
+
+        return (json_id_card, json_name_surname, json_credit_card, json_phone_number, json_reservation_date,
+                json_arrival_date, json_num_days, json_room_type, json_localizer)
+
+    def ReadDataFromProcessedStayJson(self, file_path: str):
+        """Reads a given processed stay json file and returns the value of its keys."""
+        # First, it makes sure the path for the input file has the .json extension, then it tries to open the file for
+        # reading and storing its content in a variable, and throws an exception if an error occurs during the process.
+        if file_path[-5:] != ".json":
+            raise HotelManagementException("Wrong file or file path")
+        try:
+            with open(file_path, "r", encoding="utf-8") as open_file:
+                data = json.load(open_file)
+        except FileNotFoundError as ex:
+            raise HotelManagementException("Wrong file or file path") from ex
+        except json.JSONDecodeError as ex:
+            raise HotelManagementException("JSON Decode Error - Wrong JSON Format") from ex
+
+        try:
+            json_alg = data["alg"]
+            json_type = data["type"]
+            json_id_card = data["idCard"]
+            json_localizer = data["localizer"]
+            json_arrival = data["arrival"]
+            json_departure = data["departure"]
+            json_room_key = data["room_key"]
+        except KeyError as ex:
+            open_file.close()
+            raise HotelManagementException("JSON Decode Error - Invalid JSON Key") from ex
+
+        # Close the file and return the value
+        open_file.close()
+
+        return json_alg, json_type, json_id_card, json_localizer, json_arrival, json_departure, json_room_key
