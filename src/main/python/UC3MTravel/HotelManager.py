@@ -443,8 +443,8 @@ class HotelManager:
             open_file.write(json.dumps(json_data, indent=4))
 
         # We need to delete the created file if it was created for testing purposes
-        if "unittest" in original_directory and delete_test:
-            os.remove(file_name)
+        #if "unittest" in original_directory and delete_test:
+
 
         # We restore the original current directory
         os.chdir(original_directory)

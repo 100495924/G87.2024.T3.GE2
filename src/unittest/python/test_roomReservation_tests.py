@@ -1,6 +1,7 @@
 """ Module that tests the roomReservation() function"""
 from unittest import TestCase
 from datetime import datetime
+import os
 from freezegun import freeze_time  # pip install freezegun
 from UC3MTravel.HotelManager import HotelManager
 from UC3MTravel.HotelManagementException import HotelManagementException
@@ -22,6 +23,10 @@ class TestRoomReservation(TestCase):
                                                       arrival_date="01/07/2024",
                                                       num_days=1)
         self.assertEqual(value, "385148f30bfe0c80599f7c844216578a")
+        json_dir = self.my_hotel_manager.getJsonDirectory("reservations_store")
+        filename = "12345678Z.json"
+        processed_json_path = os.path.join(json_dir, filename)
+        os.remove(processed_json_path)
 
     @freeze_time(datetime.strptime("01/07/2024", "%d/%m/%Y"))
     def test_room_reservation02(self):
@@ -99,6 +104,10 @@ class TestRoomReservation(TestCase):
                                                       arrival_date="01/07/2024",
                                                       num_days=1)
         self.assertEqual(value, "9082506560e5457fb0089c4b48ccdb42")
+        json_dir = self.my_hotel_manager.getJsonDirectory("reservations_store")
+        filename = "12345678Z.json"
+        processed_json_path = os.path.join(json_dir, filename)
+        os.remove(processed_json_path)
 
     @freeze_time(datetime.strptime("01/07/2024", "%d/%m/%Y"))
     def test_room_reservation08(self):
@@ -111,6 +120,10 @@ class TestRoomReservation(TestCase):
                                                       arrival_date="01/07/2024",
                                                       num_days=1)
         self.assertEqual(value, "9f27edcc737a118c24908738601423ba")
+        json_dir = self.my_hotel_manager.getJsonDirectory("reservations_store")
+        filename = "12345678Z.json"
+        processed_json_path = os.path.join(json_dir, filename)
+        os.remove(processed_json_path)
 
     @freeze_time(datetime.strptime("01/07/2024", "%d/%m/%Y"))
     def test_room_reservation09(self):
@@ -123,6 +136,10 @@ class TestRoomReservation(TestCase):
                                                       arrival_date="01/07/2024",
                                                       num_days=1)
         self.assertEqual(value, "3ca03f80303fd71b309a2b9f1c51b25d")
+        json_dir = self.my_hotel_manager.getJsonDirectory("reservations_store")
+        filename = "12345678Z.json"
+        processed_json_path = os.path.join(json_dir, filename)
+        os.remove(processed_json_path)
 
     @freeze_time(datetime.strptime("01/07/2024", "%d/%m/%Y"))
     def test_room_reservation10(self):
@@ -135,6 +152,10 @@ class TestRoomReservation(TestCase):
                                                       arrival_date="01/07/2024",
                                                       num_days=1)
         self.assertEqual(value, "bb948f04a913f377edacbab412fe56e3")
+        json_dir = self.my_hotel_manager.getJsonDirectory("reservations_store")
+        filename = "12345678Z.json"
+        processed_json_path = os.path.join(json_dir, filename)
+        os.remove(processed_json_path)
 
     @freeze_time(datetime.strptime("01/07/2024", "%d/%m/%Y"))
     def test_room_reservation11(self):
@@ -383,6 +404,10 @@ class TestRoomReservation(TestCase):
                                                       arrival_date="01/07/2024",
                                                       num_days=1)
         self.assertEqual(value, "fa5a80736b0b59461642e6511e8a1f9e")
+        json_dir = self.my_hotel_manager.getJsonDirectory("reservations_store")
+        filename = "12345678Z.json"
+        processed_json_path = os.path.join(json_dir, filename)
+        os.remove(processed_json_path)
 
     @freeze_time(datetime.strptime("01/07/2024", "%d/%m/%Y"))
     def test_room_reservation30(self):
@@ -395,6 +420,10 @@ class TestRoomReservation(TestCase):
                                                       arrival_date="01/07/2024",
                                                       num_days=1)
         self.assertEqual(value, "e05811f7d87dc9eb54ffa6080d425dd4")
+        json_dir = self.my_hotel_manager.getJsonDirectory("reservations_store")
+        filename = "12345678Z.json"
+        processed_json_path = os.path.join(json_dir, filename)
+        os.remove(processed_json_path)
 
     @freeze_time(datetime.strptime("01/07/2024", "%d/%m/%Y"))
     def test_room_reservation31(self):
@@ -433,6 +462,10 @@ class TestRoomReservation(TestCase):
                                                       arrival_date="02/07/2024",
                                                       num_days=1)
         self.assertEqual(value, "f7dcfc6221b24ce9c176aa61d8b123dd")
+        json_dir = self.my_hotel_manager.getJsonDirectory("reservations_store")
+        filename = "12345678Z.json"
+        processed_json_path = os.path.join(json_dir, filename)
+        os.remove(processed_json_path)
 
     @freeze_time(datetime.strptime("01/07/2024", "%d/%m/%Y"))
     def test_room_reservation34(self):
@@ -679,6 +712,10 @@ class TestRoomReservation(TestCase):
                                                       arrival_date="01/07/2024",
                                                       num_days=2)
         self.assertEqual(value, "7bb82656140fdcad38da6a7f323a0d57")
+        json_dir = self.my_hotel_manager.getJsonDirectory("reservations_store")
+        filename = "12345678Z.json"
+        processed_json_path = os.path.join(json_dir, filename)
+        os.remove(processed_json_path)
 
     @freeze_time(datetime.strptime("01/07/2024", "%d/%m/%Y"))
     def test_room_reservation53(self):
@@ -691,6 +728,10 @@ class TestRoomReservation(TestCase):
                                                       arrival_date="01/07/2024",
                                                       num_days=9)
         self.assertEqual(value, "36b4d8e28eb343a54ecb0bbe9e880233")
+        json_dir = self.my_hotel_manager.getJsonDirectory("reservations_store")
+        filename = "12345678Z.json"
+        processed_json_path = os.path.join(json_dir, filename)
+        os.remove(processed_json_path)
 
     @freeze_time(datetime.strptime("01/07/2024", "%d/%m/%Y"))
     def test_room_reservation54(self):
@@ -703,6 +744,10 @@ class TestRoomReservation(TestCase):
                                                       arrival_date="01/07/2024",
                                                       num_days=10)
         self.assertEqual(value, "23aa42c0b1d9b69ecde79c5677ce7c7f")
+        json_dir = self.my_hotel_manager.getJsonDirectory("reservations_store")
+        filename = "12345678Z.json"
+        processed_json_path = os.path.join(json_dir, filename)
+        os.remove(processed_json_path)
 
     @freeze_time(datetime.strptime("01/07/2024", "%d/%m/%Y"))
     def test_room_reservation55(self):
