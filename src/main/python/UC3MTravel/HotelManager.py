@@ -1,12 +1,14 @@
+"""HotelManager module"""
 import json
 import os
 from datetime import datetime
-from src.main.python.UC3MTravel.HotelManagementException import HotelManagementException
-from src.main.python.UC3MTravel.HotelReservation import HotelReservation
-from src.main.python.UC3MTravel.HotelStay import HotelStay
+from UC3MTravel.HotelManagementException import HotelManagementException
+from UC3MTravel.HotelReservation import HotelReservation
+from UC3MTravel.HotelStay import HotelStay
 
 
 class HotelManager:
+    """Hotel Manager Class"""
     def __init__(self):
         pass
 
@@ -124,6 +126,57 @@ class HotelManager:
         self.createJsonFile(file_name, "processed_stays_store", json_data, False)
 
         return room_key
+
+    def guest_checkout(self, room_key: str):
+        """
+        Function 3. CheckOut HM-FR-03:
+        The system will record when the client leaves the room.
+        It will also check that the room code is correct and that the departure day is as scheduled
+        (we will assume that the guest can only leave the hotel on the scheduled date).
+        Finally, it will record the output in a file.
+        """
+        # Validate the input - Adjusted to check for MD5 length, which is 32 characters
+        if not isinstance(room_key, str) or len(room_key) != 32:  # MD5 string length
+            raise HotelManagementException("Invalid room key format.")
+
+        # Search for the room_key in the "processed_stays_store"
+        file_path = self.getRoomKeyFilePath(room_key)
+        if not os.path.exists(file_path):
+            raise HotelManagementException("Room key not found in processed stays store.")
+
+        # Verify that the departure date is today
+        with open(file_path, "r", encoding="utf-8") as file:
+            stay_data = json.load(file)
+        expected_departure = datetime.strptime(stay_data["departure"],
+                                               "%d/%m/%Y %H:%M:%S").date()  # Adjusted for potential time inclusion
+        if expected_departure != datetime.utcnow().date():  # Adjusted to use UTC to align with system-wide use of UTC
+            raise HotelManagementException("Departure date is not valid.")
+
+        # Record the departure data
+        departure_data = {
+            "room_key": room_key,
+            "departure_date": datetime.utcnow().strftime("%d/%m/%Y")  # Use UTC for consistency
+        }
+        self.saveDepartureData(room_key, departure_data)
+        return True
+
+    def getRoomKeyFilePath(self, room_key: str):
+        """Retrieve the file path for the room key"""
+        directory = self.getJsonDirectory("processed_stays_store")
+        # The room_key is directly used to name the stay file
+        file_name = f"{room_key}.json"
+        file_path = os.path.join(directory, file_name)
+        if os.path.exists(file_path):
+            return file_path
+        raise FileNotFoundError(f"No file found for room key: {room_key}")
+
+    def saveDepartureData(self, room_key: str, departure_data: dict):
+        """Saves information to a directory"""
+        directory = self.getJsonDirectory("checkouts_store")  # Ensure exists or is created
+        file_name = f"{room_key}_checkout.json"  # Naming for checkout files
+        file_path = os.path.join(directory, file_name)
+        with open(file_path, "w", encoding="utf-8") as file:
+            json.dump(departure_data, file, indent=4)
 
     def validateCreditCard(self, credit_card: str):
         """Checks if the credit_card parameter of the roomReservation function is valid, else it raises the
@@ -457,7 +510,7 @@ class HotelManager:
         return (json_id_card, json_name_surname, json_credit_card, json_phone_number, json_reservation_date,
                 json_arrival_date, json_num_days, json_room_type, json_localizer)
 
-    def ReadDataFromProcessedStayJson(self, file_path: str):
+    def readDataFromProcessedStayJson(self, file_path: str):
         """Reads a given processed stay json file and returns the value of its keys."""
         # First, it makes sure the path for the input file has the .json extension, then it tries to open the file for
         # reading and storing its content in a variable, and throws an exception if an error occurs during the process.
