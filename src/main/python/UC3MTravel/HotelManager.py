@@ -117,7 +117,7 @@ class HotelManager:
         json_data = {
             "alg": "SHA-256",
             "type": hotel_stay.type,
-            "idCard": hotel_stay.idCard,
+            "idCard": hotel_stay.id_card,
             "localizer": hotel_stay.localizer,
             "arrival": hotel_stay.arrival,
             "departure": hotel_stay.departure,
@@ -137,6 +137,7 @@ class HotelManager:
         """
         # Validate the input - Adjusted to check for MD5 length, which is 32 characters
         if not isinstance(room_key, str) or len(room_key) != 32:  # MD5 string length
+            #print(room_key)
             raise HotelManagementException("Invalid room key format.")
 
         # Search for the room_key in the "processed_stays_store"

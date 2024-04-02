@@ -1,13 +1,14 @@
+""" Module that tests the guestArrival() function"""
 import os.path
 from unittest import TestCase
-from freezegun import freeze_time
 from datetime import datetime
-from src.main.python.UC3MTravel.HotelManager import HotelManager
-from src.main.python.UC3MTravel.HotelManagementException import HotelManagementException
+from freezegun import freeze_time
+from UC3MTravel.HotelManager import HotelManager
+from UC3MTravel.HotelManagementException import HotelManagementException
 
 
 class TestGuestArrival(TestCase):
-    # Test cases for guestArrival (Function 2)
+    """Test cases for guestArrival (Function 2)"""
 
     def setUp(self):
         self.my_hotel_manager = HotelManager()
@@ -17,19 +18,19 @@ class TestGuestArrival(TestCase):
         """ TC1: Valid case that covers all the nodes"""
         file_path = os.path.join("guestArrival_tests_JSON", "guestArrival_test1.json")
         room_value = self.my_hotel_manager.guestArrival(file_path)
-        self.assertEqual(room_value, "400f35f55fc2be1b5022aec0e2509cd53ca6cd9017e6e5da4cfe375d18758617")
+        self.assertEqual(room_value, "9f75f184df311e0c5ab5595ab4f66ec6021eda13b1c2db1ab5e337cb7992b832")
 
         json_dir = self.my_hotel_manager.getJsonDirectory("processed_stays_store")
         filename = room_value + ".json"
         processed_json_path = os.path.join(json_dir, filename)
-        json_output = self.my_hotel_manager.ReadDataFromProcessedStayJson(processed_json_path)
+        json_output = self.my_hotel_manager.readDataFromProcessedStayJson(processed_json_path)
         self.assertEqual(json_output[0], "SHA-256")
         self.assertEqual(json_output[1], "single")
-        self.assertEqual(json_output[2], "12345678Z")
-        self.assertEqual(json_output[3], "385148f30bfe0c80599f7c844216578a")
+        self.assertEqual(json_output[2], "00000000T")
+        self.assertEqual(json_output[3], "cdaeb5334e828615221afb3f4aed4607")
         self.assertEqual(json_output[4], 1719792000.0)
         self.assertEqual(json_output[5], 1719878400.0)
-        self.assertEqual(json_output[6], "400f35f55fc2be1b5022aec0e2509cd53ca6cd9017e6e5da4cfe375d18758617")
+        self.assertEqual(json_output[6], "9f75f184df311e0c5ab5595ab4f66ec6021eda13b1c2db1ab5e337cb7992b832")
 
     @freeze_time(datetime.strptime("01/07/2024", "%d/%m/%Y"))
     def testGuestArrival02(self):

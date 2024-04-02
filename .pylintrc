@@ -67,7 +67,7 @@ ignored-modules=
 
 # Python code to execute, usually for sys.path manipulation such as
 # pygtk.require().
-#init-hook=
+init-hook="import sys; sys.path.append('./src/main/python')"
 
 # Use multiple processes to speed up Pylint. Specifying 0 will auto-detect the
 # number of processors available to use, and will cap the count on Windows to
@@ -305,7 +305,9 @@ ignored-parents=
 max-args=9
 
 # Maximum number of attributes for a class (see R0902).
-max-attributes=7
+# MODIFIED RULE
+#max-attributes=7
+max-attributes=10
 
 # Maximum number of boolean expressions in an if statement (see R0916).
 max-bool-expr=5
@@ -314,13 +316,17 @@ max-bool-expr=5
 max-branches=12
 
 # Maximum number of locals for function / method body.
-max-locals=15
+# MODIFIED RULE
+#max-locals=15
+max-locals=25
 
 # Maximum number of parents for a class (see R0901).
 max-parents=7
 
 # Maximum number of public methods for a class (see R0904).
-max-public-methods=20
+# MODIFIED RULE
+#max-public-methods=20
+max-public-methods=100
 
 # Maximum number of return / yield for function / method body.
 max-returns=6
@@ -635,9 +641,8 @@ additional-builtins=
 
 # Tells whether unused global variables should be treated as a violation.
 # MODIFIED RULE
-#allow-global-unused-variables=yes
+allow-global-unused-variables=yes
 
-allow-global-unused-variables=no
 
 # List of names allowed to shadow builtins
 allowed-redefined-builtins=

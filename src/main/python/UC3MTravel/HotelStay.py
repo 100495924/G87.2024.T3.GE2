@@ -1,8 +1,9 @@
-''' Class HotelStay (GE2.2) '''
+""" Class HotelStay (GE2.2) """
 from datetime import datetime
 import hashlib
 
 class HotelStay():
+    """ HotelStay class."""
     def __init__(self, idcard, localizer, numdays, roomtype):
         self.__alg = "SHA-256"
         self.__type = roomtype
@@ -23,15 +24,16 @@ class HotelStay():
 
     @property
     def type(self):
+        """ property that represents the type of room"""
         return self.__type
 
     @property
-    def idCard(self):
+    def id_card(self):
         """Property that represents the id_card of the guest."""
         return self.__idcard
 
-    @idCard.setter
-    def icCard(self, value):
+    @id_card.setter
+    def id_card(self, value):
         self.__idcard = value
 
     @property

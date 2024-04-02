@@ -1,8 +1,9 @@
+""" Module that tests the roomReservation() function"""
 from unittest import TestCase
 from datetime import datetime
 from freezegun import freeze_time  # pip install freezegun
-from src.main.python.UC3MTravel.HotelManager import HotelManager
-from src.main.python.UC3MTravel.HotelManagementException import HotelManagementException
+from UC3MTravel.HotelManager import HotelManager
+from UC3MTravel.HotelManagementException import HotelManagementException
 
 
 class TestRoomReservation(TestCase):
